@@ -1,81 +1,198 @@
-<!-- Establece el tipo de doc html5-->
 <!DOCTYPE html>
-<!-- Inicio del doc Html -->
 <html lang="es">
-<!-- Datos que le pasamos al navegador  -->
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
-    <!-- META ETIQUETAS SEO -->
-    <meta name="description" content="Harry Potter y la Piedra Filosofal">
-    <meta name="keywords" content="Harry, Potter, Fantasía, Magia, Hechiceria, Hogwarts, Reino Unido, Pelicula, saga, novelas">
-    <title>INICIO - HARRY POTTER</title>
-    <!-- LINK AOS -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/style.css">   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WhaleRadar Pro - Pure Live Data</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=JetBrains+Mono&display=swap');
+        body { background-color: #05070a; font-family: 'Space Grotesk', sans-serif; color: #f8fafc; margin: 0; overflow-x: hidden; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .whale-card { background: linear-gradient(145deg, #0f172a, #020617); border: 1px solid #1e293b; }
+        .live-dot { animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        
+        /* Estilos del Medidor */
+        .gauge-container { position: relative; width: 180px; height: 90px; margin: 0 auto; overflow: hidden; }
+        .gauge-bg { width: 180px; height: 180px; border-radius: 50%; border: 15px solid #1e293b; border-bottom-color: transparent; border-left-color: transparent; transform: rotate(-135deg); }
+        .gauge-fill { 
+            position: absolute; top: 0; left: 0; width: 180px; height: 180px; border-radius: 50%; 
+            border: 15px solid transparent; border-bottom-color: currentColor; border-left-color: currentColor; 
+            transform: rotate(var(--angle)); transition: all 1s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .gauge-needle {
+            position: absolute; bottom: 0; left: 50%; width: 2px; height: 70px; 
+            background: white; transform-origin: bottom; 
+            transform: translateX(-50%) rotate(var(--needle-angle)); transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes slideIn { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-item { animation: slideIn 0.4s ease-out forwards; }
+    </style>
 </head>
-<!-- Representa todo el contenido de la pagina web -->
 <body>
-    <div class="grid">
- <!-- Etiquetas son <header><section><footer> -->   
- <header  class="parrafo-2 align-items-center">
-    <div data-aos="flip-left"
-    data-aos-easing="ease-out-cubic"
-    data-aos-duration="3000">
-        <img src="img/logo.png" alt="logo" class="logo" data-aos="zoom-in">
-    </div>
-    <nav>
-        <ul data-aos="zoom-in" data-aos-duration="2000">
-            <li><a href="#" class="boton-primario" >INICIO</a></li>
-            <li><a href="pages/contacto.html" class="boton-error">CONTACTO</a></li>
-            <li><a href="https://google.com" target="_blank" class="boton-error">Ir a google</a></li>
-            <li><a href="img/imagen.jpeg" download class="boton-error">Descargar el Libro</a></li>
-        </ul>
-    </nav>
- </header> 
-<main>
-<section class="genio" >
-    <div class="imgPrincipal" data-aos="flip-left"
-    data-aos-easing="ease-out-cubic"
-    data-aos-duration="3000" >
-        <img src="img/imagen.jpeg" alt="imagen" >
-    </div>
-    <div class="p20" data-aos="fade-up" data-aos-duration="3000" >
-    <h1>Harry Potter </h1>
-    <h2>Sinopsis</h2>
-    <p>Harry Potter es un niño huérfano que vive con sus únicos parientes vivos, la familia Dursley, en un barrio residencial inglés. En su cumpleaños número 11, Harry es visitado por un misterioso individuo llamado Rubeus Hagrid, quien le revela que realmente él es un mago bastante popular en el mundo mágico por haber sobrevivido al ataque mortal de lord Voldemort cuando solamente tenía un año de edad. Quien al principio sus tíos les dijeron que sus padres fallecieron en un “accidente” pero nunca fue cierto. Tras haber asesinado a sus padres (James y Lily Potter), <b> Voldemort intentó matar a Harry pero no lo consiguió</b>, dejándole solamente una cicatriz en forma de rayo sobre su frente. Sabiendo esto, Hagrid acompaña a Harry para comprar lo necesario con tal de comenzar su formación en el Colegio Hogwarts de Magia y Hechicería.Sin el consentimiento de sus tíos, Harry Potter asiste a Hogwarts para empezar a aprender conjuros y conocer a nuevos amigos; en el proceso, también inicia sus rivalidades con otros estudiantes y parte del personal del colegio. Durante su estancia, Harry Potter descubre que la institución alberga un misterioso objeto en sus dominios, el cual es conocido como la piedra filosofal. Este poderoso elemento es buscado discretamente por Voldemort, a quien la comunidad mágica daba por muerto tras haberle rebotado el ataque mortal dirigido contra Harry Potter. Contrario a dichas creencias, su espíritu desea afanosamente encontrar la piedra para recuperar sus antiguas habilidades de brujo. Además, la piedra filosofal es conocida por otorgar igualmente la inmortalidad a su poseedor.
-    Tras intuir que alguien está intentando robar la legendaria piedra, Harry y sus amigos, Hermione Granger y Ron Weasley, dan aviso a los profesores del colegio pero estos se niegan a creer que sus advertencias tengan fundamento, puesto que saben que el objeto se halla bien resguardado en una cámara secreta y vigilada. En vista de lo anterior, deciden acudir a la cámara para asegurarse de que nadie consiga robarla. Una vez dentro, se topan con una serie de obstáculos y trampas que deben sortear antes de llegar al cuarto donde se aloja la piedra filosofal. Al final, sólo Harry logra llegar a este destino encontrándose con el profesor Quirinus Quirrell en el lugar. El profesor admite que ha sido él quien ha mantenido con vida a lord Voldemort al alimentarse con sangre de unicornios en el Bosque Prohibido, alojándolo a manera de parásito en su cuerpo. Después de enfrentarse contra Quirrell y Voldemort, Harry Potter logra evitar que este último se apodere de la piedra, la cual a últimas instancias es destruida por el director del colegio, Albus Dumbledore. Al concluir el período escolar, Harry regresa a su hogar con los Dursley en espera de que comience su segundo año en Hogwarts. 
-    </p>
-</div>
-</section>
-    
-    
-</main>
-<footer class="producto  parrafo-2">
-    <div>
-        <img src="img/logo.png" alt="logo" class="logo">
-    </div>
-    <div class="rrss">
-        <h3>REDES SOCIALES</h3>
-        <a href="https://www.Facebook.com" target="_blank">
-            <img src="img/icons8-facebook-rodeado-de-círculo-48.png" alt="facebook" class="scale icono"></a>
-            <a href="https://www.linkedin.com" target="_blank"><img src="img/icons8-linkedin-rodeado-de-círculo-48.png" alt="linkedin" class="scale icono"></a>
-            <a href="https://www.twitter.com" target="_blank"><img src="img/icons8-twitter-cuadrado-48.png" alt="twiter" class="scale icono"></a>
-            <a href="https://www.youtube.com/@nicognito9822/videos" target="_blank"><img src="img/icons8-youtube-play-48.png" alt="youtube" class="scale icono"></a>
-    </div>
-    <div class="contacto">
-        <h3>CONTACTO</h3>
-        <p>gabrielchamo@hotmail.com</p>
-    </div>
- </footer> 
-</div>
-<!-- SCRIPT AOS -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-    AOS.init();
-</script>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const WhaleRadarApp = () => {
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+            const [pass, setPass] = useState("");
+            const [events, setEvents] = useState([]);
+            const [dailyStats, setDailyStats] = useState({ bulls: 0, total: 0 });
+            const [sentimentScore, setSentimentScore] = useState(65);
+
+            useEffect(() => {
+                if (!isAuthenticated) return;
+                const socket = new WebSocket('wss://ws.blockchain.info/inv');
+                socket.onopen = () => socket.send(JSON.stringify({ "op": "unconfirmed_sub" }));
+
+                socket.onmessage = (msg) => {
+                    const data = JSON.parse(msg.data);
+                    if (data.op === "utx") {
+                        const totalSatoshis = data.x.out.reduce((acc, out) => acc + out.value, 0);
+                        const btcValue = totalSatoshis / 100000000;
+
+                        if (btcValue >= 5) {
+                            const isBull = data.x.out.length <= 2;
+                            const newEvent = {
+                                id: data.x.hash,
+                                txid: data.x.hash,
+                                amount: btcValue.toLocaleString(undefined, {minimumFractionDigits: 2}),
+                                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                                action: isBull ? { label: 'BUY', type: 'BULL' } : { label: 'SELL', type: 'BEAR' }
+                            };
+                            setEvents(prev => [newEvent, ...prev].slice(0, 5));
+                            setDailyStats(prev => {
+                                const newTotal = prev.total + 1;
+                                const newBulls = prev.bulls + (isBull ? 1 : 0);
+                                const newScore = Math.round((newBulls / newTotal) * 100);
+                                setSentimentScore(newScore);
+                                return { bulls: newBulls, total: newTotal };
+                            });
+                        }
+                    }
+                };
+                return () => socket.close();
+            }, [isAuthenticated]);
+
+            const gaugeAngle = -135 + (sentimentScore * 1.8); 
+            const needleAngle = -90 + (sentimentScore * 1.8);
+            
+            const getSentimentColor = () => {
+                if (sentimentScore > 70) return 'text-green-500';
+                if (sentimentScore > 40) return 'text-yellow-500';
+                return 'text-red-500';
+            };
+
+            const getSentimentLabel = () => {
+                if (sentimentScore > 75) return 'EXTREME GREED';
+                if (sentimentScore > 55) return 'GREED';
+                if (sentimentScore > 45) return 'NEUTRAL';
+                if (sentimentScore > 25) return 'FEAR';
+                return 'EXTREME FEAR';
+            };
+
+            if (!isAuthenticated) {
+                return (
+                    <div className="fixed inset-0 bg-black flex items-center justify-center p-6">
+                        <div className="whale-card p-10 rounded-[3rem] w-full max-w-xs text-center border-blue-500/30">
+                            <i className="ph-fill ph-shield-star text-5xl text-blue-500 mb-6 block mx-auto"></i>
+                            <h2 className="text-xl font-black uppercase italic mb-8 tracking-tighter">WhaleRadar Access</h2>
+                            <input type="password" value={pass} onChange={(e) => setPass(e.target.value)} placeholder="CONTRASEÑA" className="w-full bg-black border border-white/10 rounded-2xl py-4 text-center mono text-blue-400 mb-4 outline-none focus:border-blue-500" />
+                            <button onClick={() => pass.toUpperCase() === "WHALE2026" && setIsAuthenticated(true)} className="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest">Conectar Radar</button>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="max-w-md mx-auto min-h-screen bg-[#05070a] pb-32">
+                    <header className="p-6 flex justify-between items-center sticky top-0 bg-black/80 backdrop-blur-lg z-20 border-b border-white/5">
+                        <h1 className="text-2xl font-black italic uppercase tracking-tighter italic">Whale<span className="text-blue-400">Radar</span></h1>
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-blue-500 rounded-full live-dot"></span>
+                            <span className="text-[9px] mono font-bold text-gray-500 uppercase tracking-widest">Live Flow</span>
+                        </div>
+                    </header>
+
+                    <div className="p-6">
+                        {/* Indicador Fear & Greed - Protagonista */}
+                        <div className="whale-card p-8 rounded-[3rem] mb-10 text-center border-blue-500/10">
+                            <h3 className="text-[10px] mono text-gray-500 font-black uppercase tracking-[0.4em] mb-6 italic">Current Sentiment Index</h3>
+                            <div className="gauge-container mb-4">
+                                <div className="gauge-bg"></div>
+                                <div className={`gauge-fill ${getSentimentColor()}`} style={{ '--angle': `${gaugeAngle}deg` }}></div>
+                                <div className="gauge-needle" style={{ '--needle-angle': `${needleAngle}deg` }}></div>
+                            </div>
+                            <div className={`text-2xl font-black tracking-tighter ${getSentimentColor()}`}>
+                                {sentimentScore} - {getSentimentLabel()}
+                            </div>
+                            <p className="text-[8px] text-gray-600 font-bold uppercase mt-2 tracking-widest">Sincronizado con Red Bitcoin</p>
+                        </div>
+
+                        {/* Monitor en Tiempo Real */}
+                        <div className="space-y-4 mb-10">
+                            <h3 className="text-[10px] mono text-gray-700 font-black uppercase tracking-[0.4em] mb-4 text-center italic">Live Whale Blocks (+5 BTC)</h3>
+                            {events.length === 0 && (
+                                <div className="text-center py-20 opacity-30">
+                                    <i className="ph ph-radar animate-pulse text-3xl mb-4"></i>
+                                    <p className="text-[9px] mono uppercase tracking-[0.2em]">Escaneando bloques institucionales...</p>
+                                </div>
+                            )}
+                            {events.map(ev => (
+                                <div key={ev.id} className="whale-card p-6 rounded-[2.5rem] border-white/5 animate-item">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <span className="text-[8px] mono text-blue-500 font-bold uppercase tracking-widest">On-Chain Data</span>
+                                            <div className="text-2xl font-black text-white">{ev.amount} BTC</div>
+                                        </div>
+                                        <div className={`px-4 py-1.5 rounded-full text-[9px] font-black ${ev.action.type === 'BULL' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                                            {ev.action.label}
+                                        </div>
+                                    </div>
+                                    <a href={`https://mempool.space/tx/${ev.txid}`} target="_blank" className="mt-4 w-full bg-blue-600/5 border border-blue-500/10 py-3 rounded-2xl text-center font-black uppercase text-[8px] tracking-[0.2em] text-blue-400 block active:bg-blue-600 active:text-white transition-all">
+                                        Auditar Transacción <i className="ph-bold ph-arrow-square-out ml-1"></i>
+                                    </a>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Análisis de Proyección Final */}
+                        <div className={`whale-card p-7 rounded-[2.5rem] border-2 ${sentimentScore > 50 ? 'border-green-500/20 bg-green-500/5' : 'border-red-500/20 bg-red-500/5'}`}>
+                            <div className="flex items-center gap-3 mb-4">
+                                <i className={`ph-fill ${sentimentScore > 50 ? 'ph-rocket-launch text-green-400' : 'ph-warning-octagon text-red-400'} text-2xl`}></i>
+                                <h4 className={`text-[10px] font-black uppercase tracking-widest ${sentimentScore > 50 ? 'text-green-400' : 'text-red-400'}`}>
+                                    Proyección Q1 2026
+                                </h4>
+                            </div>
+                            <p className="text-xs text-gray-400 italic font-bold leading-relaxed">
+                                {sentimentScore > 50 
+                                    ? `Basado en el flujo de ballenas, el sesgo es alcista (${sentimentScore}%). La fase actual de re-acumulación proyecta un movimiento vertical hacia arriba entre Enero y Marzo.` 
+                                    : `¡ALERTA! El sesgo detectado es bajista (${100 - sentimentScore}%). Los datos sugieren una fase de distribución que podría romper el rango verticalmente hacia abajo.`
+                                }
+                            </p>
+                        </div>
+                    </div>
+
+                    <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-black/95 backdrop-blur-xl border-t border-white/5 p-8 flex justify-around items-center z-50">
+                        <i className="ph-fill ph-radar text-3xl text-blue-500"></i>
+                        <i className="ph ph-shield-check text-2xl text-gray-600"></i>
+                        <i className="ph ph-user text-2xl text-gray-600"></i>
+                    </nav>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WhaleRadarApp />);
+    </script>
 </body>
 </html>
