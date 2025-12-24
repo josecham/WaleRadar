@@ -19,7 +19,17 @@
         .live-dot { animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         
-        /* Estilos del Medidor */
+        /* Alerta de Mega Ballena */
+        .mega-whale-alert {
+            animation: alert-flash 1s infinite alternate;
+            border: 2px solid #3b82f6;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+        }
+        @keyframes alert-flash {
+            from { background-color: rgba(59, 130, 246, 0.1); }
+            to { background-color: rgba(59, 130, 246, 0.3); }
+        }
+
         .gauge-container { position: relative; width: 180px; height: 90px; margin: 0 auto; overflow: hidden; }
         .gauge-bg { width: 180px; height: 180px; border-radius: 50%; border: 15px solid #1e293b; border-bottom-color: transparent; border-left-color: transparent; transform: rotate(-135deg); }
         .gauge-fill { 
@@ -46,8 +56,8 @@
             const [isAuthenticated, setIsAuthenticated] = useState(false);
             const [pass, setPass] = useState("");
             const [events, setEvents] = useState([]);
-            const [dailyStats, setDailyStats] = useState({ bulls: 0, total: 0 });
             const [sentimentScore, setSentimentScore] = useState(65);
+            const [megaWhale, setMegaWhale] = useState(null);
 
             useEffect(() => {
                 if (!isAuthenticated) return;
@@ -62,6 +72,20 @@
 
                         if (btcValue >= 5) {
                             const isBull = data.x.out.length <= 2;
+                            
+                            // ALERTA MEGA BALLENA (+1000 BTC)
+                            if (btcValue >= 1000) {
+                                setMegaWhale({
+                                    amount: btcValue.toLocaleString(),
+                                    type: isBull ? 'COMPRA' : 'VENTA'
+                                });
+                                // Sonido de alerta (pulso radar)
+                                const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                                audio.play().catch(() => {});
+                                
+                                setTimeout(() => setMegaWhale(null), 8000); // Desaparece en 8 seg
+                            }
+
                             const newEvent = {
                                 id: data.x.hash,
                                 txid: data.x.hash,
@@ -69,13 +93,13 @@
                                 time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
                                 action: isBull ? { label: 'BUY', type: 'BULL' } : { label: 'SELL', type: 'BEAR' }
                             };
+                            
                             setEvents(prev => [newEvent, ...prev].slice(0, 5));
-                            setDailyStats(prev => {
-                                const newTotal = prev.total + 1;
-                                const newBulls = prev.bulls + (isBull ? 1 : 0);
-                                const newScore = Math.round((newBulls / newTotal) * 100);
-                                setSentimentScore(newScore);
-                                return { bulls: newBulls, total: newTotal };
+                            
+                            setSentimentScore(prev => {
+                                const adjustment = isBull ? 0.5 : -0.5;
+                                const newScore = Math.min(Math.max(prev + adjustment, 10), 90);
+                                return Math.round(newScore);
                             });
                         }
                     }
@@ -102,11 +126,11 @@
 
             if (!isAuthenticated) {
                 return (
-                    <div className="fixed inset-0 bg-black flex items-center justify-center p-6">
+                    <div className="fixed inset-0 bg-black flex items-center justify-center p-6 text-white">
                         <div className="whale-card p-10 rounded-[3rem] w-full max-w-xs text-center border-blue-500/30">
                             <i className="ph-fill ph-shield-star text-5xl text-blue-500 mb-6 block mx-auto"></i>
-                            <h2 className="text-xl font-black uppercase italic mb-8 tracking-tighter">WaleRadar Access</h2>
-                            <input type="password" value={pass} onChange={(e) => setPass(e.target.value)} placeholder="CONTRASEÑA" className="w-full bg-black border border-white/10 rounded-2xl py-4 text-center mono text-blue-400 mb-4 outline-none focus:border-blue-500" />
+                            <h2 className="text-xl font-black uppercase italic mb-8 tracking-tighter">WhaleRadar Access</h2>
+                            <input type="password" value={pass} onChange={(e) => setPass(e.target.value)} placeholder="CONTRASEÑA" className="w-full bg-black border border-white/10 rounded-2xl py-4 text-center mono text-blue-400 mb-4 outline-none" />
                             <button onClick={() => pass.toUpperCase() === "WHALE2026" && setIsAuthenticated(true)} className="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest">Conectar Radar</button>
                         </div>
                     </div>
@@ -114,7 +138,17 @@
             }
 
             return (
-                <div className="max-w-md mx-auto min-h-screen bg-[#05070a] pb-32">
+                <div className="max-w-md mx-auto min-h-screen bg-[#05070a] pb-32 text-white">
+                    {/* MODAL ALERTA MEGA BALLENA */}
+                    {megaWhale && (
+                        <div className="fixed top-20 left-4 right-4 z-50 mega-whale-alert p-6 rounded-3xl text-center backdrop-blur-xl">
+                            <i className="ph-fill ph-warning-circle text-4xl text-blue-400 mb-2 animate-bounce"></i>
+                            <h2 className="text-2xl font-black tracking-tighter text-white uppercase italic">¡MEGA BALLENA DETECTADA!</h2>
+                            <p className="mono text-blue-400 text-lg font-bold">{megaWhale.amount} BTC en {megaWhale.type}</p>
+                            <p className="text-[9px] uppercase tracking-[0.3em] mt-2 opacity-60 italic text-white">Movimiento Institucional Nivel 5</p>
+                        </div>
+                    )}
+
                     <header className="p-6 flex justify-between items-center sticky top-0 bg-black/80 backdrop-blur-lg z-20 border-b border-white/5">
                         <h1 className="text-2xl font-black italic uppercase tracking-tighter italic">Wale<span className="text-blue-400">Radar</span></h1>
                         <div className="flex items-center gap-2">
@@ -124,7 +158,6 @@
                     </header>
 
                     <div className="p-6">
-                        {/* Indicador Fear & Greed - Protagonista */}
                         <div className="whale-card p-8 rounded-[3rem] mb-10 text-center border-blue-500/10">
                             <h3 className="text-[10px] mono text-gray-500 font-black uppercase tracking-[0.4em] mb-6 italic">Current Sentiment Index</h3>
                             <div className="gauge-container mb-4">
@@ -138,15 +171,8 @@
                             <p className="text-[8px] text-gray-600 font-bold uppercase mt-2 tracking-widest">Sincronizado con Red Bitcoin</p>
                         </div>
 
-                        {/* Monitor en Tiempo Real */}
                         <div className="space-y-4 mb-10">
                             <h3 className="text-[10px] mono text-gray-700 font-black uppercase tracking-[0.4em] mb-4 text-center italic">Live Whale Blocks (+5 BTC)</h3>
-                            {events.length === 0 && (
-                                <div className="text-center py-20 opacity-30">
-                                    <i className="ph ph-radar animate-pulse text-3xl mb-4"></i>
-                                    <p className="text-[9px] mono uppercase tracking-[0.2em]">Escaneando bloques institucionales...</p>
-                                </div>
-                            )}
                             {events.map(ev => (
                                 <div key={ev.id} className="whale-card p-6 rounded-[2.5rem] border-white/5 animate-item">
                                     <div className="flex justify-between items-start">
@@ -164,22 +190,6 @@
                                 </div>
                             ))}
                         </div>
-
-                        {/* Análisis de Proyección Final */}
-                        <div className={`whale-card p-7 rounded-[2.5rem] border-2 ${sentimentScore > 50 ? 'border-green-500/20 bg-green-500/5' : 'border-red-500/20 bg-red-500/5'}`}>
-                            <div className="flex items-center gap-3 mb-4">
-                                <i className={`ph-fill ${sentimentScore > 50 ? 'ph-rocket-launch text-green-400' : 'ph-warning-octagon text-red-400'} text-2xl`}></i>
-                                <h4 className={`text-[10px] font-black uppercase tracking-widest ${sentimentScore > 50 ? 'text-green-400' : 'text-red-400'}`}>
-                                    Proyección Q1 2026
-                                </h4>
-                            </div>
-                            <p className="text-xs text-gray-400 italic font-bold leading-relaxed">
-                                {sentimentScore > 50 
-                                    ? `Basado en el flujo de ballenas, el sesgo es alcista (${sentimentScore}%). La fase actual de re-acumulación proyecta un movimiento vertical hacia arriba entre Enero y Marzo.` 
-                                    : `¡ALERTA! El sesgo detectado es bajista (${100 - sentimentScore}%). Los datos sugieren una fase de distribución que podría romper el rango verticalmente hacia abajo.`
-                                }
-                            </p>
-                        </div>
                     </div>
 
                     <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-black/95 backdrop-blur-xl border-t border-white/5 p-8 flex justify-around items-center z-50">
@@ -193,10 +203,6 @@
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<WhaleRadarApp />);
-    </script>
-    <script defer src="/_vercel/insights/script.js"></script>
-    <script>
-      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
     </script>
 </body>
 </html>
