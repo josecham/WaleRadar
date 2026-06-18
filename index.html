@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WhaleRadar Lite - Institutional Flow Only</title>
+    <title>WhaleRadar Lite</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght=700&family=JetBrains+Mono&display=swap');
@@ -27,47 +24,52 @@
             from { background-color: rgba(59, 130, 246, 0.1); transform: scale(1); }
             to { background-color: rgba(59, 130, 246, 0.3); transform: scale(1.02); }
         }
-        @keyframes slideIn { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .animate-item { animation: slideIn 0.4s ease-out forwards; }
     </style>
 </head>
 <body>
-    <div id="root"></div>
 
-    <script type="text/babel">
-        // Asegurar disponibilidad de hooks globales de React de manera limpia para Babel
-        const { useState, useEffect } = React;
+    <div id="app-container" class="max-w-md mx-auto min-h-screen bg-[#05070a] pb-24">
+        
+        <div id="mega-alert" class="hidden fixed top-20 left-4 right-4 z-50 mega-whale-alert p-6 rounded-3xl text-center backdrop-blur-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 text-blue-400 mb-2 mx-auto">
+                <path fillRule="evenodd" d="M12 2.25c-4.142 0-7.5 3.358-7.5 7.5v5.524c0 .888.396 1.73 1.082 2.298l2.122 1.758A3.75 3.75 0 0 0 10.126 20.25h3.748a3.75 3.75 0 0 0 2.422-.92l2.122-1.758A2.89 2.89 0 0 0 19.5 15.274V9.75c0-4.142-3.358-7.5-7.5-7.5Zm0 12a2.25 2.25 0 1 0 0-4 2.25 2.25 0 0 0 0 4Z" clipRule="evenodd" />
+            </svg>
+            <h2 class="text-2xl font-black tracking-tighter text-white uppercase italic">MEGA WHALE ALERT</h2>
+            <p id="mega-alert-text" class="mono text-blue-400 text-lg font-bold">0 BTC</p>
+        </div>
 
-        // Componentes de Iconos en formato clásico
-        function IconShield() {
-            return (
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-12 h-12 text-blue-500 mb-6 mx-auto">
-                    <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08a.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 6a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z" clipRule="evenodd" />
-                </svg>
-            );
-        }
+        <header class="p-6 flex justify-between items-center sticky top-0 bg-black/80 backdrop-blur-lg z-20 border-b border-white/5">
+            <h1 class="text-2xl font-black italic uppercase tracking-tighter text-white">Whale<span class="text-blue-400">Radar</span></h1>
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-blue-500 rounded-full live-dot"></span>
+                <span class="text-[9px] mono font-bold text-gray-500 uppercase tracking-widest">Live Flow Only</span>
+            </div>
+        </header>
 
-        function IconRocket() {
-            return (
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10 text-blue-400 mb-2 fill-current mx-auto">
-                    <path d="M12.81 4.474a.75.75 0 0 0-1.06 0l-3.22 3.22a.75.75 0 1 0 1.06 1.06l3.22-3.22a.75.75 0 0 0 0-1.06Z" />
-                    <path fillRule="evenodd" d="M11.25 1c0 .414.336.75.75.75h.008a.75.75 0 1 0 0-1.5H12a.75.75 0 0 0-.75.75Zm-.47 4.22a.75.75 0 0 0 0 1.06l3.22 3.22a.75.75 0 1 0 1.06-1.06l-3.22-3.22a.75.75 0 0 0-1.06 0Z" clipRule="evenodd" />
-                    <path d="M4.22 13.53a.75.75 0 0 1 1.06 0l3.22 3.22a.75.75 0 1 1-1.06 1.06l-3.22-3.22a.75.75 0 0 1 0-1.06Zm14.5 0a.75.75 0 0 0-1.06 0l-3.22 3.22a.75.75 0 1 0 1.06 1.06l3.22-3.22a.75.75 0 0 0 0-1.06Z" />
-                    <path fillRule="evenodd" d="M12 2.25c-4.142 0-7.5 3.358-7.5 7.5v5.524c0 .888.396 1.73 1.082 2.298l2.122 1.758A3.75 3.75 0 0 0 10.126 20.25h3.748a3.75 3.75 0 0 0 2.422-.92l2.122-1.758A2.89 2.89 0 0 0 19.5 15.274V9.75c0-4.142-3.358-7.5-7.5-7.5Zm0 12a2.25 2.25 0 1 0 0-4 2.25 2.25 0 0 0 0 4Z" clipRule="evenodd" />
-                </svg>
-            );
-        }
-
-        function WhaleRadarApp() {
-            const [isAuthenticated, setIsAuthenticated] = useState(false);
-            const [pass, setPass] = useState("");
-            const [events, setEvents] = useState([]);
-            const [megaWhale, setMegaWhale] = useState(null);
-
-            useEffect(function() {
-                if (!isAuthenticated) return;
+        <div class="p-6">
+            <div class="space-y-4">
+                <h3 class="text-[10px] mono text-gray-600 font-black uppercase tracking-[0.4em] mb-6 text-center italic">Institutional Live Feed</h3>
                 
-                var socket;
+                <div id="feed-lista" class="space-y-4">
+                    <div id="waiting-msg" class="text-center py-12 text-gray-600 mono text-xs animate-pulse">
+                        ESPERANDO MOVIMIENTOS EN LA BLOCKCHAIN...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            var feedLista = document.getElementById('feed-lista');
+            var waitingMsg = document.getElementById('waiting-msg');
+            var megaAlert = document.getElementById('mega-alert');
+            var megaAlertText = document.getElementById('mega-alert-text');
+            var eventsCache = [];
+
+            // Iniciar conexión directa con la Blockchain
+            var socket;
+            function connectBlockchain() {
                 try {
                     socket = new WebSocket('wss://ws.blockchain.info/inv');
                     
@@ -84,81 +86,75 @@
                                 }, 0);
                                 var btcValue = totalSatoshis / 100000000;
 
-                                // Mostrar transacciones institucionales (Mínimo 5 BTC)
+                                // Filtrar: Solo movimientos institucionales de ballenas (Mínimo 5 BTC)
                                 if (btcValue >= 5) {
+                                    if (waitingMsg) {
+                                        waitingMsg.style.display = 'none';
+                                    }
+
                                     var isBull = data.x.out.length <= 2;
-                                    
-                                    // Alerta Crítica (Mínimo 1000 BTC)
+                                    var txid = data.x.hash || "Unknown TXID";
+                                    var timeStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                                    var amountFormatted = btcValue.toLocaleString(undefined, {minimumFractionDigits: 2});
+
+                                    // Disparar Alerta Visual si es una Mega Ballena (>= 1000 BTC)
                                     if (btcValue >= 1000) {
-                                        setMegaWhale({ 
-                                            amount: btcValue.toLocaleString(), 
-                                            type: isBull ? 'COMPRA' : 'VENTA' 
-                                        });
+                                        megaAlertText.innerText = amountFormatted + " BTC en " + (isBull ? 'COMPRA' : 'VENTA');
+                                        megaAlert.classList.remove('hidden');
                                         
                                         try {
                                             var audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-                                            audio.volume = 0.5;
-                                            audio.play().catch(function() {});
-                                        } catch(sndErr) {}
+                                            audio.volume = 0.4;
+                                            audio.play().catch(function(){});
+                                        } catch(e){}
 
-                                        setTimeout(function() { setMegaWhale(null); }, 7000);
+                                        setTimeout(function() {
+                                            megaAlert.classList.add('hidden');
+                                        }, 7000);
                                     }
 
-                                    var newEvent = {
-                                        id: data.x.hash || Math.random().toString(),
-                                        txid: data.x.hash || "Unknown TXID",
-                                        amountFormatted: btcValue.toLocaleString(undefined, {minimumFractionDigits: 2}),
-                                        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                                        actionLabel: isBull ? 'BUY / ACCUMULATION' : 'SELL / DISTRIBUTION',
-                                        actionType: isBull ? 'BULL' : 'BEAR'
-                                    };
+                                    // Crear el elemento HTML en string para no estresar el DOM
+                                    var badgeClass = isBull ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400';
+                                    var badgeLabel = isBull ? 'BUY / ACCUMULATION' : 'SELL / DISTRIBUTION';
                                     
-                                    setEvents(function(prev) { 
-                                        return [newEvent].concat(prev).slice(0, 12); 
-                                    });
+                                    var cardHtml = `
+                                        <div class="whale-card p-6 rounded-[2.5rem] border-white/5 opacity-0 transform translate-y-2 transition-all duration-300" style="opacity: 1; transform: translateY(0);">
+                                            <div class="flex justify-between items-center">
+                                                <div>
+                                                    <span class="text-[8px] mono text-blue-500 font-bold uppercase tracking-wider">On-Chain Realtime</span>
+                                                    <div class="text-2xl font-black text-white">${amountFormatted} <span class="text-blue-400 text-lg">BTC</span></div>
+                                                </div>
+                                                <div class="px-4 py-2 rounded-xl text-[9px] mono font-black ${badgeClass}">
+                                                    ${badgeLabel}
+                                                </div>
+                                            </div>
+                                            <div class="mt-3 flex justify-between items-center text-[8px] mono text-gray-600 font-bold">
+                                                <span>TX: ${txid.substring(0, 20)}...</span>
+                                                <span class="text-gray-500">${timeStr}</span>
+                                            </div>
+                                        </div>
+                                    `;
+
+                                    // Renderizar arriba del feed y limitar a 12 items
+                                    feedLista.insertAdjacentHTML('afterbegin', cardHtml);
+                                    if (feedLista.children.length > 13) {
+                                        feedLista.removeChild(feedLista.lastChild);
+                                    }
                                 }
                             }
                         } catch (err) {}
                     };
-                } catch (e) {}
 
-                return function() { 
-                    if (socket) socket.close(); 
-                };
-            }, [isAuthenticated]);
-
-            function handleLogin() {
-                if (pass.toUpperCase() === "WHALE2026") {
-                    setIsAuthenticated(true);
+                    socket.onclose = function() {
+                        setTimeout(connectBlockchain, 5000); // Auto-reconexión si cae
+                    };
+                } catch (e) {
+                    setTimeout(connectBlockchain, 5000);
                 }
             }
 
-            if (!isAuthenticated) {
-                return (
-                    <div className="fixed inset-0 bg-black flex items-center justify-center p-6">
-                        <div className="whale-card p-10 rounded-[3rem] w-full max-w-xs text-center border-blue-500/30">
-                            <IconShield />
-                            <h2 className="text-xl font-black uppercase italic mb-8 tracking-tighter text-white">WhaleRadar Access</h2>
-                            <input 
-                                type="password" 
-                                value={pass} 
-                                onChange={function(e) { setPass(e.target.value); }} 
-                                onKeyDown={function(e) { if (e.key === 'Enter') handleLogin(); }}
-                                placeholder="CONTRASEÑA" 
-                                className="w-full bg-black border border-white/10 rounded-2xl py-4 text-center mono text-blue-400 mb-4 outline-none" 
-                            />
-                            <button onClick={handleLogin} className="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest text-white">Conectar Radar</button>
-                        </div>
-                    </div>
-                );
-            }
-
-            return (
-                <div className="max-w-md mx-auto min-h-screen bg-[#05070a] pb-24">
-                    {megaWhale && (
-                        <div className="fixed top-20 left-4 right-4 z-50 mega-whale-alert p-6 rounded-3xl text-center backdrop-blur-xl">
-                            <IconRocket />
-                            <h2 className="text-2xl font-black tracking-tighter text-white uppercase italic">MEGA WHALE ALERT</h2>
-                            <p className="mono text-blue-400 text-lg font-bold">{megaWhale.amount} BTC en {megaWhale.type}</p>
-                        </div>
-                    )}
+            connectBlockchain();
+        })();
+    </script>
+</body>
+</html>
