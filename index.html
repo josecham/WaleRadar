@@ -6,8 +6,8 @@
     <title>WhaleRadar Lite - Institutional Flow Only</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     
     <style>
@@ -27,7 +27,6 @@
             from { background-color: rgba(59, 130, 246, 0.1); transform: scale(1); }
             to { background-color: rgba(59, 130, 246, 0.3); transform: scale(1.02); }
         }
-
         @keyframes slideIn { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .animate-item { animation: slideIn 0.4s ease-out forwards; }
     </style>
@@ -36,63 +35,76 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        // Iconos SVG puros para evitar dependencias
-        const IconShield = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-12 h-12 text-blue-500 mb-6 mx-auto">
-                <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08a.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 6a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z" clipRule="evenodd" />
-            </svg>
-        );
+        // Asegurar disponibilidad de hooks globales de React de manera limpia para Babel
+        const { useState, useEffect } = React;
 
-        const IconRocket = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10 text-blue-400 mb-2 fill-current">
-                <path d="M12.81 4.474a.75.75 0 0 0-1.06 0l-3.22 3.22a.75.75 0 1 0 1.06 1.06l3.22-3.22a.75.75 0 0 0 0-1.06Z" />
-                <path fillRule="evenodd" d="M11.25 1c0 .414.336.75.75.75h.008a.75.75 0 1 0 0-1.5H12a.75.75 0 0 0-.75.75Zm-.47 4.22a.75.75 0 0 0 0 1.06l3.22 3.22a.75.75 0 1 0 1.06-1.06l-3.22-3.22a.75.75 0 0 0-1.06 0Z" clipRule="evenodd" />
-                <path d="M4.22 13.53a.75.75 0 0 1 1.06 0l3.22 3.22a.75.75 0 1 1-1.06 1.06l-3.22-3.22a.75.75 0 0 1 0-1.06Zm14.5 0a.75.75 0 0 0-1.06 0l-3.22 3.22a.75.75 0 1 0 1.06 1.06l3.22-3.22a.75.75 0 0 0 0-1.06Z" />
-                <path fillRule="evenodd" d="M12 2.25c-4.142 0-7.5 3.358-7.5 7.5v5.524c0 .888.396 1.73 1.082 2.298l2.122 1.758A3.75 3.75 0 0 0 10.126 20.25h3.748a3.75 3.75 0 0 0 2.422-.92l2.122-1.758A2.89 2.89 0 0 0 19.5 15.274V9.75c0-4.142-3.358-7.5-7.5-7.5Zm0 12a2.25 2.25 0 1 0 0-4 2.25 2.25 0 0 0 0 4Z" clipRule="evenodd" />
-            </svg>
-        );
+        // Componentes de Iconos en formato clásico
+        function IconShield() {
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-12 h-12 text-blue-500 mb-6 mx-auto">
+                    <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08a.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 6a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z" clipRule="evenodd" />
+                </svg>
+            );
+        }
 
-        const WhaleRadarApp = () => {
-            const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-            const [pass, setPass] = React.useState("");
-            const [events, setEvents] = React.useState([]);
-            const [megaWhale, setMegaWhale] = React.useState(null);
+        function IconRocket() {
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-10 h-10 text-blue-400 mb-2 fill-current mx-auto">
+                    <path d="M12.81 4.474a.75.75 0 0 0-1.06 0l-3.22 3.22a.75.75 0 1 0 1.06 1.06l3.22-3.22a.75.75 0 0 0 0-1.06Z" />
+                    <path fillRule="evenodd" d="M11.25 1c0 .414.336.75.75.75h.008a.75.75 0 1 0 0-1.5H12a.75.75 0 0 0-.75.75Zm-.47 4.22a.75.75 0 0 0 0 1.06l3.22 3.22a.75.75 0 1 0 1.06-1.06l-3.22-3.22a.75.75 0 0 0-1.06 0Z" clipRule="evenodd" />
+                    <path d="M4.22 13.53a.75.75 0 0 1 1.06 0l3.22 3.22a.75.75 0 1 1-1.06 1.06l-3.22-3.22a.75.75 0 0 1 0-1.06Zm14.5 0a.75.75 0 0 0-1.06 0l-3.22 3.22a.75.75 0 1 0 1.06 1.06l3.22-3.22a.75.75 0 0 0 0-1.06Z" />
+                    <path fillRule="evenodd" d="M12 2.25c-4.142 0-7.5 3.358-7.5 7.5v5.524c0 .888.396 1.73 1.082 2.298l2.122 1.758A3.75 3.75 0 0 0 10.126 20.25h3.748a3.75 3.75 0 0 0 2.422-.92l2.122-1.758A2.89 2.89 0 0 0 19.5 15.274V9.75c0-4.142-3.358-7.5-7.5-7.5Zm0 12a2.25 2.25 0 1 0 0-4 2.25 2.25 0 0 0 0 4Z" clipRule="evenodd" />
+                </svg>
+            );
+        }
 
-            React.useEffect(() => {
+        function WhaleRadarApp() {
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+            const [pass, setPass] = useState("");
+            const [events, setEvents] = useState([]);
+            const [megaWhale, setMegaWhale] = useState(null);
+
+            useEffect(function() {
                 if (!isAuthenticated) return;
                 
-                let socket;
+                var socket;
                 try {
                     socket = new WebSocket('wss://ws.blockchain.info/inv');
-                    socket.onopen = () => {
+                    
+                    socket.onopen = function() {
                         socket.send(JSON.stringify({ "op": "unconfirmed_sub" }));
                     };
 
-                    socket.onmessage = (msg) => {
+                    socket.onmessage = function(msg) {
                         try {
-                            const data = JSON.parse(msg.data);
+                            var data = JSON.parse(msg.data);
                             if (data.op === "utx" && data.x && data.x.out) {
-                                const totalSatoshis = data.x.out.reduce((acc, out) => acc + (out.value || 0), 0);
-                                const btcValue = totalSatoshis / 100000000;
+                                var totalSatoshis = data.x.out.reduce(function(acc, out) { 
+                                    return acc + (out.value || 0); 
+                                }, 0);
+                                var btcValue = totalSatoshis / 100000000;
 
-                                // Filtrar solo movimientos de ballenas (Mayores o iguales a 5 BTC)
+                                // Mostrar transacciones institucionales (Mínimo 5 BTC)
                                 if (btcValue >= 5) {
-                                    const isBull = data.x.out.length <= 2;
+                                    var isBull = data.x.out.length <= 2;
                                     
-                                    // Alerta gigante si es una Mega Ballena (>= 1000 BTC)
+                                    // Alerta Crítica (Mínimo 1000 BTC)
                                     if (btcValue >= 1000) {
-                                        setMegaWhale({ amount: btcValue.toLocaleString(), type: isBull ? 'COMPRA' : 'VENTA' });
+                                        setMegaWhale({ 
+                                            amount: btcValue.toLocaleString(), 
+                                            type: isBull ? 'COMPRA' : 'VENTA' 
+                                        });
                                         
                                         try {
-                                            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                                            var audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
                                             audio.volume = 0.5;
-                                            audio.play().catch(e => console.log("Audio block prevented"));
+                                            audio.play().catch(function() {});
                                         } catch(sndErr) {}
 
-                                        setTimeout(() => setMegaWhale(null), 7000);
+                                        setTimeout(function() { setMegaWhale(null); }, 7000);
                                     }
 
-                                    const newEvent = {
+                                    var newEvent = {
                                         id: data.x.hash || Math.random().toString(),
                                         txid: data.x.hash || "Unknown TXID",
                                         amountFormatted: btcValue.toLocaleString(undefined, {minimumFractionDigits: 2}),
@@ -101,26 +113,25 @@
                                         actionType: isBull ? 'BULL' : 'BEAR'
                                     };
                                     
-                                    // Guardamos las últimas 12 ballenas detectadas en el feed
-                                    setEvents(prev => [newEvent, ...prev].slice(0, 12));
+                                    setEvents(function(prev) { 
+                                        return [newEvent].concat(prev).slice(0, 12); 
+                                    });
                                 }
                             }
-                        } catch (err) {
-                            console.error("Error parsing streaming data", err);
-                        }
+                        } catch (err) {}
                     };
-                } catch (e) {
-                    console.error("WebSocket connection fault", e);
-                }
+                } catch (e) {}
 
-                return () => { if(socket) socket.close(); };
+                return function() { 
+                    if (socket) socket.close(); 
+                };
             }, [isAuthenticated]);
 
-            const handleLogin = () => {
+            function handleLogin() {
                 if (pass.toUpperCase() === "WHALE2026") {
                     setIsAuthenticated(true);
                 }
-            };
+            }
 
             if (!isAuthenticated) {
                 return (
@@ -131,8 +142,8 @@
                             <input 
                                 type="password" 
                                 value={pass} 
-                                onChange={(e) => setPass(e.target.value)} 
-                                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                                onChange={function(e) { setPass(e.target.value); }} 
+                                onKeyDown={function(e) { if (e.key === 'Enter') handleLogin(); }}
                                 placeholder="CONTRASEÑA" 
                                 className="w-full bg-black border border-white/10 rounded-2xl py-4 text-center mono text-blue-400 mb-4 outline-none" 
                             />
@@ -151,54 +162,3 @@
                             <p className="mono text-blue-400 text-lg font-bold">{megaWhale.amount} BTC en {megaWhale.type}</p>
                         </div>
                     )}
-
-                    <header className="p-6 flex justify-between items-center sticky top-0 bg-black/80 backdrop-blur-lg z-20 border-b border-white/5">
-                        <h1 className="text-2xl font-black italic uppercase tracking-tighter text-white">Whale<span className="text-blue-400">Radar</span></h1>
-                        <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 bg-blue-500 rounded-full live-dot"></span>
-                            <span className="text-[9px] mono font-bold text-gray-500 uppercase tracking-widest">Live Flow Only</span>
-                        </div>
-                    </header>
-
-                    <div className="p-6">
-                        {/* LISTA DE BLOQUES EXCLUSIVA */}
-                        <div className="space-y-4">
-                            <h3 className="text-[10px] mono text-gray-600 font-black uppercase tracking-[0.4em] mb-6 text-center italic">Institutional Live Feed</h3>
-                            
-                            {events.length === 0 ? (
-                                <div className="text-center py-12 text-gray-600 mono text-xs animate-pulse">
-                                    ESPERANDO MOVIMIENTOS EN LA BLOCKCHAIN...
-                                </div>
-                            ) : (
-                                events.map(ev => {
-                                    if (!ev) return null;
-                                    return (
-                                        <div key={ev.id} className="whale-card p-6 rounded-[2.5rem] border-white/5 animate-item">
-                                            <div className="flex justify-between items-center">
-                                                <div>
-                                                    <span className="text-[8px] mono text-blue-500 font-bold uppercase tracking-wider">On-Chain Realtime</span>
-                                                    <div className="text-2xl font-black text-white">{ev.amountFormatted} <span className="text-blue-400 text-lg">BTC</span></div>
-                                                </div>
-                                                <div className={"px-4 py-2 rounded-xl text-[9px] mono font-black " + (ev.actionType === 'BULL' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400')}>
-                                                    {ev.actionLabel}
-                                                </div>
-                                            </div>
-                                            <div className="mt-3 flex justify-between items-center text-[8px] mono text-gray-600 font-bold">
-                                                <span>TX: {ev.txid ? ev.txid.substring(0, 20) : ""}...</span>
-                                                <span className="text-gray-500">{ev.time}</span>
-                                            </div>
-                                        </div>
-                                    );
-                                })
-                            )}
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<WhaleRadarApp />);
-    </script>
-</body>
-</html>
