@@ -48,7 +48,7 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        // Componentes de iconos puros sin dependencias externas
+        // Iconos SVG puros para evitar dependencias
         const IconShield = () => (
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-12 h-12 text-blue-500 mb-6 mx-auto">
                 <path fillRule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.08a.75.75 0 0 0-.722.515A12.74 12.74 0 0 0 2.25 9.75c0 5.942 4.064 10.933 9.563 12.348a.749.749 0 0 0 .374 0c5.499-1.415 9.563-6.406 9.563-12.348 0-1.39-.223-2.73-.635-3.985a.75.75 0 0 0-.722-.516l-.143.001c-2.996 0-5.717-1.17-7.734-3.08ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 6a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Z" clipRule="evenodd" />
@@ -95,8 +95,14 @@
                                     if (btcValue >= 1000) {
                                         setMegaWhale({ amount: btcValue.toLocaleString(), type: isBull ? 'COMPRA' : 'VENTA' });
                                         setMegaWhaleCount(prev => prev + 1);
-                                        const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-                                        audio.play().catch(() => {});
+                                        
+                                        // Ejecución segura de alertas sonoras post-interacción de login
+                                        try {
+                                            const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                                            audio.volume = 0.5;
+                                            audio.play().catch(e => console.log("Audio block prevented"));
+                                        } catch(sndErr) {}
+
                                         setTimeout(() => setMegaWhale(null), 7000);
                                     }
 
@@ -117,11 +123,11 @@
                                 }
                             }
                         } catch (err) {
-                            console.error("Error en parsing", err);
+                            console.error("Error parsing streaming data", err);
                         }
                     };
                 } catch (e) {
-                    console.error("Error de conexion", e);
+                    console.error("WebSocket connection fault", e);
                 }
 
                 return () => { if(socket) socket.close(); };
@@ -140,7 +146,7 @@
                 };
             }, [events]);
 
-            // Formateo Seguro de Atributos CSS Estáticos (Idéntico a la solución del Trading Journal anterior)
+            // Formateo seguro de Atributos de Estilo Plano
             const fillStyle = { transform: "rotate(" + (-135 + (sentimentScore * 1.8)) + "deg)" };
             const needleStyle = { transform: "translateX(-50%) rotate(" + (-90 + (sentimentScore * 1.8)) + "deg)" };
             const buyProgressStyle = { width: stats.buyPer + "%" };
@@ -160,14 +166,27 @@
                 return 'EXTREME FEAR';
             };
 
+            const handleLogin = () => {
+                if (pass.toUpperCase() === "WHALE2026") {
+                    setIsAuthenticated(true);
+                }
+            };
+
             if (!isAuthenticated) {
                 return (
                     <div className="fixed inset-0 bg-black flex items-center justify-center p-6">
                         <div className="whale-card p-10 rounded-[3rem] w-full max-w-xs text-center border-blue-500/30">
                             <IconShield />
                             <h2 className="text-xl font-black uppercase italic mb-8 tracking-tighter text-white">WhaleRadar Access</h2>
-                            <input type="password" value={pass} onChange={(e) => setPass(e.target.value)} placeholder="CONTRASEÑA" className="w-full bg-black border border-white/10 rounded-2xl py-4 text-center mono text-blue-400 mb-4 outline-none" />
-                            <button onClick={() => pass.toUpperCase() === "WHALE2026" && setIsAuthenticated(true)} className="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest text-white">Conectar Radar</button>
+                            <input 
+                                type="password" 
+                                value={pass} 
+                                onChange={(e) => setPass(e.target.value)} 
+                                onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+                                placeholder="CONTRASEÑA" 
+                                className="w-full bg-black border border-white/10 rounded-2xl py-4 text-center mono text-blue-400 mb-4 outline-none" 
+                            />
+                            <button onClick={handleLogin} className="w-full bg-blue-600 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest text-white">Conectar Radar</button>
                         </div>
                     </div>
                 );
@@ -241,4 +260,31 @@
                                                 <span className="text-[8px] mono text-blue-500 font-bold uppercase">On-Chain Data</span>
                                                 <div className="text-2xl font-black text-white">{ev.amountFormatted} BTC</div>
                                             </div>
-                                            <div className={"px-4 py-2 rounded-full text-[10px] font-black " + (ev.action?.type === 'BULL' ? 'bg-green-50
+                                            <div className={"px-4 py-2 rounded-full text-[10px] font-black " + (ev.action?.type === 'BULL' ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400')}>
+                                                {ev.action?.label}
+                                            </div>
+                                        </div>
+                                        <div className="mt-4 text-[9px] mono text-gray-600 font-bold">{ev.txid ? ev.txid.substring(0, 24) : ""}...</div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-black/95 backdrop-blur-xl border-t border-white/5 p-8 flex justify-around items-center z-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7 text-blue-500">
+                            <path d="M12 22.5c5.799 0 10.5-4.701 10.5-10.5S17.799 1.5 12 1.5 1.5 6.201 1.5 12 6.201 22.5 12 22.5Zm0-2.25a8.25 8.25 0 1 1 0-16.5 8.25 8.25 0 0 1 0 16.5Z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-gray-600">
+                            <path d="M12 1.5a.75.75 0 0 1 .75.75V4.35a8.25 8.25 0 0 1 7.4 7.4h2.1a.75.75 0 0 1 0 1.5h-2.1a8.25 8.25 0 0 1-7.4 7.4v2.1a.75.75 0 0 1-1.5 0v-2.1a8.25 8.25 0 0 1-7.4-7.4H1.5a.75.75 0 0 1 0-1.5h2.1a8.25 8.25 0 0 1 7.4-7.4V2.25A.75.75 0 0 1 12 1.5Z" />
+                        </svg>
+                    </nav>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<WhaleRadarApp />);
+    </script>
+</body>
+</html>
