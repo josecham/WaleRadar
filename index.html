@@ -60,28 +60,27 @@
     </div>
 
     <script>
-
         (function() {
         var feedLista = document.getElementById('feed-lista');
         var waitingMsg = document.getElementById('waiting-msg');
         var megaAlert = document.getElementById('mega-alert');
         var megaAlertText = document.getElementById('mega-alert-text');
-        var eventsCache = [];
 
         var socket;
         function connectBlockchain() {
             try {
-                socket = new WebSocket('wss://ws.blockchain.info/inv');
+                socket = new WebSocket('wss://mempool.space/api/v1/ws');
                 
                 socket.onopen = function() {
-                    socket.send(JSON.stringify({ "op": "unconfirmed_sub" }));
+                    socket.send(JSON.stringify({ "action": "want", "data": ["mempool-blocks", "transactions"] }));
                 };
 
                 socket.onmessage = function(msg) {
                     try {
                         var data = JSON.parse(msg.data);
-                        if (data.op === "utx" && data.x && data.x.out) {
-                            var totalSatoshis = data.x.out.reduce(function(acc, out) { 
+                        var tx = data.transaction;
+                        if (tx && tx.vout) {
+                            var totalSatoshis = tx.vout.reduce(function(acc, out) { 
                                 return acc + (out.value || 0); 
                             }, 0);
                             var btcValue = totalSatoshis / 100000000;
@@ -91,8 +90,8 @@
                                     waitingMsg.style.display = 'none';
                                 }
 
-                                var isBull = data.x.out.length <= 2;
-                                var txid = data.x.hash || "Unknown TXID";
+                                var isBull = tx.vout.length <= 2;
+                                var txid = tx.txid || "Unknown TXID";
                                 var timeStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
                                 var amountFormatted = btcValue.toLocaleString(undefined, {minimumFractionDigits: 2});
 
@@ -151,4 +150,5 @@
 
         connectBlockchain();
     })();
-        
+
+     
